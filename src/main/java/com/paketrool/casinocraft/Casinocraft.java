@@ -2,6 +2,7 @@ package com.paketrool.casinocraft;
 
 import com.paketrool.casinocraft.item.CasinocraftCreativeTab;
 import com.paketrool.casinocraft.item.CasinocraftItems;
+import com.paketrool.casinocraft.loot.CasinocraftLoot;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ public class Casinocraft implements ModInitializer {
 	public void onInitialize() {
 		CasinocraftItems.init();
 		CasinocraftCreativeTab.init();
+		CasinocraftLoot.init();
 		LOGGER.info("Casinocraft: bootstrap");
 	}
 
