@@ -1,0 +1,12 @@
+{
+	"parent": "minecraft:block/cube",
+	"textures": {
+		"up": "casinocraft:block/slot_machine_top",
+		"down": "casinocraft:block/slot_machine_bottom",
+		"north": "casinocraft:block/slot_machine_front",
+		"south": "casinocraft:block/slot_machine_side",
+		"east": "casinocraft:block/slot_machine_side",
+		"west": "casinocraft:block/slot_machine_side",
+		"particle": "casinocraft:block/slot_machine_side"
+	}
+}

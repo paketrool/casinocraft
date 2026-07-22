@@ -1,5 +1,6 @@
 {
 	"itemGroup.casinocraft.main": "Casinocraft",
 	"item.casinocraft.casino_chip": "Casino Chip",
-	"item.casinocraft.golden_talisman": "Golden Talisman"
+	"item.casinocraft.golden_talisman": "Golden Talisman",
+	"block.casinocraft.slot_machine": "Slot Machine"
 }

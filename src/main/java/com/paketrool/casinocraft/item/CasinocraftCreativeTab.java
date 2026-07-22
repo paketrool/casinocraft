@@ -1,6 +1,7 @@
 package com.paketrool.casinocraft.item;
 
 import com.paketrool.casinocraft.Casinocraft;
+import com.paketrool.casinocraft.block.CasinocraftBlocks;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,6 +22,7 @@ public final class CasinocraftCreativeTab {
 			.title(Component.translatable("itemGroup.casinocraft.main"))
 			.icon(() -> new ItemStack(CasinocraftItems.CASINO_CHIP))
 			.displayItems((params, output) -> {
+				output.accept(CasinocraftBlocks.SLOT_MACHINE);
 				output.accept(CasinocraftItems.CASINO_CHIP);
 				output.accept(CasinocraftItems.GOLDEN_TALISMAN);
 			})

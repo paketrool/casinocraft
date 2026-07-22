@@ -1,8 +1,11 @@
 package com.paketrool.casinocraft;
 
+import com.paketrool.casinocraft.block.CasinocraftBlocks;
+import com.paketrool.casinocraft.block.entity.CasinocraftBlockEntities;
 import com.paketrool.casinocraft.item.CasinocraftCreativeTab;
 import com.paketrool.casinocraft.item.CasinocraftItems;
 import com.paketrool.casinocraft.loot.CasinocraftLoot;
+import com.paketrool.casinocraft.menu.CasinocraftMenus;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -14,7 +17,10 @@ public class Casinocraft implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		CasinocraftBlocks.init();
+		CasinocraftBlockEntities.init();
 		CasinocraftItems.init();
+		CasinocraftMenus.init();
 		CasinocraftCreativeTab.init();
 		CasinocraftLoot.init();
 		LOGGER.info("Casinocraft: bootstrap");
