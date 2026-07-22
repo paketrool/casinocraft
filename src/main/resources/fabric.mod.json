@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "casinocraft",
+	"version": "${version}",
+	"name": "Casinocraft",
+	"description": "Слот-машина в Minecraft: ставь фишки, крути барабаны, срывай куш.",
+	"authors": [
+		"paketrool"
+	],
+	"contact": {
+		"sources": "https://github.com/paketrool/casinocraft"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/casinocraft/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.paketrool.casinocraft.Casinocraft"
+		],
+		"client": [
+			"com.paketrool.casinocraft.client.CasinocraftClient"
+		]
+	},
+	"mixins": [
+		"casinocraft.mixins.json",
+		{
+			"config": "casinocraft.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.5",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

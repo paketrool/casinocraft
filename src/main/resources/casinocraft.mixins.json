@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.paketrool.casinocraft.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"CasinocraftMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
