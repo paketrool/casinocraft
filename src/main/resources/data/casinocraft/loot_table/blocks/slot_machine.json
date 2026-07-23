@@ -6,7 +6,14 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "casinocraft:slot_machine"
+					"name": "casinocraft:slot_machine",
+					"conditions": [
+						{
+							"condition": "minecraft:block_state_property",
+							"block": "casinocraft:slot_machine",
+							"properties": { "half": "lower" }
+						}
+					]
 				}
 			],
 			"conditions": [

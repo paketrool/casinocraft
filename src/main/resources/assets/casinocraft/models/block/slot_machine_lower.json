@@ -1,0 +1,37 @@
+{
+	"textures": {
+		"corpus": "casinocraft:block/slot_machine_corpus",
+		"front":  "casinocraft:block/slot_machine_lower_front",
+		"top":    "casinocraft:block/slot_machine_lower_top",
+		"bottom": "casinocraft:block/slot_machine_lower_bottom",
+		"particle": "casinocraft:block/slot_machine_lower_front"
+	},
+	"elements": [
+		{
+			"name": "base_plate",
+			"from": [0, 0, 0],
+			"to":   [16, 2, 16],
+			"faces": {
+				"up":    { "uv": [0, 0, 16, 16], "texture": "#bottom" },
+				"down":  { "uv": [0, 0, 16, 16], "texture": "#bottom" },
+				"north": { "uv": [0, 14, 16, 16], "texture": "#corpus" },
+				"south": { "uv": [0, 14, 16, 16], "texture": "#corpus" },
+				"east":  { "uv": [0, 14, 16, 16], "texture": "#corpus" },
+				"west":  { "uv": [0, 14, 16, 16], "texture": "#corpus" }
+			}
+		},
+		{
+			"name": "corpus",
+			"from": [1, 2, 1],
+			"to":   [15, 16, 15],
+			"faces": {
+				"up":    { "uv": [1, 1, 15, 15], "texture": "#top" },
+				"down":  { "uv": [1, 1, 15, 15], "texture": "#bottom" },
+				"north": { "uv": [1, 0, 15, 14], "texture": "#front" },
+				"south": { "uv": [1, 0, 15, 14], "texture": "#corpus" },
+				"east":  { "uv": [1, 0, 15, 14], "texture": "#corpus" },
+				"west":  { "uv": [1, 0, 15, 14], "texture": "#corpus" }
+			}
+		}
+	]
+}

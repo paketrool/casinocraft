@@ -1,8 +1,12 @@
 {
 	"variants": {
-		"facing=north": { "model": "casinocraft:block/slot_machine" },
-		"facing=east":  { "model": "casinocraft:block/slot_machine", "y": 90 },
-		"facing=south": { "model": "casinocraft:block/slot_machine", "y": 180 },
-		"facing=west":  { "model": "casinocraft:block/slot_machine", "y": 270 }
+		"facing=north,half=lower": { "model": "casinocraft:block/slot_machine_lower" },
+		"facing=east,half=lower":  { "model": "casinocraft:block/slot_machine_lower", "y": 90 },
+		"facing=south,half=lower": { "model": "casinocraft:block/slot_machine_lower", "y": 180 },
+		"facing=west,half=lower":  { "model": "casinocraft:block/slot_machine_lower", "y": 270 },
+		"facing=north,half=upper": { "model": "casinocraft:block/slot_machine_upper" },
+		"facing=east,half=upper":  { "model": "casinocraft:block/slot_machine_upper", "y": 90 },
+		"facing=south,half=upper": { "model": "casinocraft:block/slot_machine_upper", "y": 180 },
+		"facing=west,half=upper":  { "model": "casinocraft:block/slot_machine_upper", "y": 270 }
 	}
 }
