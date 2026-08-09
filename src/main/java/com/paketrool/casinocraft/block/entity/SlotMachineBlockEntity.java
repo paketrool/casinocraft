@@ -34,11 +34,14 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 	public static final int DATA_LAST_JACKPOT = 2;
 	// DATA_LAST_GRID indices 3..11 hold the last-result grid (ordinals of 9 symbols)
 
+	public static final int SPIN_DURATION_TICKS = 40;
+
 	private final NonNullList<ItemStack> items = NonNullList.withSize(SLOT_COUNT, ItemStack.EMPTY);
 	private int bet = 1;
 	private int lastPayout = 0;
 	private int lastJackpot = 0;
 	private final int[] lastGrid = new int[9];
+	private long spinStartTime = -1L;
 
 	private final ContainerData dataAccess = new ContainerData() {
 		@Override
@@ -94,6 +97,21 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		return pool.is(CasinocraftItems.CASINO_CHIP) && pool.getCount() >= bet;
 	}
 
+	public long getSpinStartTime() {
+		return spinStartTime;
+	}
+
+	public int getLastGridSymbol(int col, int row) {
+		int idx = col * 3 + row;
+		if (idx < 0 || idx >= lastGrid.length) return 0;
+		return lastGrid[idx];
+	}
+
+	public boolean isSpinning() {
+		if (level == null || spinStartTime < 0) return false;
+		return (level.getGameTime() - spinStartTime) < SPIN_DURATION_TICKS;
+	}
+
 	public void spin(Player player) {
 		if (level == null || level.isClientSide) return;
 		if (!canSpin()) return;
@@ -101,6 +119,8 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		ItemStack pool = items.get(0);
 		pool.shrink(bet);
 		if (pool.isEmpty()) items.set(0, ItemStack.EMPTY);
+
+		spinStartTime = level.getGameTime();
 
 		SlotSpinResult result = SlotMachineLogic.spin(level.random, bet);
 
@@ -235,6 +255,7 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		bet = tag.getIntOr("Bet", 1);
 		lastPayout = tag.getIntOr("LastPayout", 0);
 		lastJackpot = tag.getIntOr("LastJackpot", 0);
+		spinStartTime = tag.getLongOr("SpinStartTime", -1L);
 		int[] grid = tag.getIntArray("LastGrid").orElse(new int[0]);
 		for (int i = 0; i < lastGrid.length; i++) {
 			lastGrid[i] = i < grid.length ? grid[i] : SlotSymbol.COAL.ordinal();
@@ -252,6 +273,7 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		tag.putInt("LastPayout", lastPayout);
 		tag.putInt("LastJackpot", lastJackpot);
 		tag.putIntArray("LastGrid", lastGrid.clone());
+		tag.putLong("SpinStartTime", spinStartTime);
 	}
 
 	@Nullable
