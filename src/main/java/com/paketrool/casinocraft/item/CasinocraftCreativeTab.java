@@ -25,6 +25,7 @@ public final class CasinocraftCreativeTab {
 				output.accept(CasinocraftBlocks.SLOT_MACHINE);
 				output.accept(CasinocraftItems.CASINO_CHIP);
 				output.accept(CasinocraftItems.GOLDEN_TALISMAN);
+				output.accept(CasinocraftItems.CASINO_GUIDE);
 			})
 			.build();
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, TAB_KEY, tab);

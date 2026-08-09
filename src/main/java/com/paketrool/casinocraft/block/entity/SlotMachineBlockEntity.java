@@ -8,11 +8,15 @@ import com.paketrool.casinocraft.slot.SlotSymbol;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -27,12 +32,13 @@ import org.jetbrains.annotations.Nullable;
 public class SlotMachineBlockEntity extends BlockEntity implements Container, MenuProvider {
 
 	public static final int SLOT_COUNT = 1;
-	public static final int DATA_COUNT = 12;
+	public static final int DATA_COUNT = 13;
 
 	public static final int DATA_BET = 0;
 	public static final int DATA_LAST_PAYOUT = 1;
 	public static final int DATA_LAST_JACKPOT = 2;
 	// DATA_LAST_GRID indices 3..11 hold the last-result grid (ordinals of 9 symbols)
+	public static final int DATA_SPIN_TICKS_LEFT = 12;
 
 	public static final int SPIN_DURATION_TICKS = 40;
 
@@ -50,6 +56,11 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 				case DATA_BET -> bet;
 				case DATA_LAST_PAYOUT -> lastPayout;
 				case DATA_LAST_JACKPOT -> lastJackpot;
+				case DATA_SPIN_TICKS_LEFT -> {
+					if (spinStartTime < 0 || level == null) yield 0;
+					long elapsed = level.getGameTime() - spinStartTime;
+					yield (int) Math.max(0L, SPIN_DURATION_TICKS - elapsed);
+				}
 				default -> {
 					int gridIdx = index - 3;
 					yield (gridIdx >= 0 && gridIdx < 9) ? lastGrid[gridIdx] : 0;
@@ -112,6 +123,39 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		return (level.getGameTime() - spinStartTime) < SPIN_DURATION_TICKS;
 	}
 
+	public static void serverTick(Level level, BlockPos pos, BlockState state, SlotMachineBlockEntity be) {
+		if (be.spinStartTime < 0) return;
+		long elapsed = level.getGameTime() - be.spinStartTime;
+
+		if (elapsed < SPIN_DURATION_TICKS && elapsed % 4L == 0L) {
+			float pitch = 0.8f + (elapsed / 4f) * 0.05f;
+			level.playSound(null, pos, SoundEvents.NOTE_BLOCK_HAT.value(), SoundSource.BLOCKS, 0.4f, pitch);
+		}
+
+		if (elapsed >= SPIN_DURATION_TICKS) {
+			if (be.lastJackpot > 0 && level instanceof ServerLevel serverLevel) {
+				level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1.0f, 1.0f);
+				level.playSound(null, pos, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundSource.BLOCKS, 1.0f, 1.0f);
+				serverLevel.sendParticles(ParticleTypes.END_ROD,
+					pos.getX() + 0.5, pos.getY() + 2.5, pos.getZ() + 0.5,
+					30, 0.8, 0.8, 0.8, 0.3);
+				serverLevel.sendParticles(ParticleTypes.FIREWORK,
+					pos.getX() + 0.5, pos.getY() + 2.5, pos.getZ() + 0.5,
+					40, 0.8, 0.8, 0.8, 0.5);
+			} else if (be.lastPayout > 0 && level instanceof ServerLevel serverLevel) {
+				level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 1.0f, 1.2f);
+				serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER,
+					pos.getX() + 0.5, pos.getY() + 2.0, pos.getZ() + 0.5,
+					20, 0.5, 0.5, 0.5, 0.1);
+			} else {
+				level.playSound(null, pos, SoundEvents.NOTE_BLOCK_BASS.value(), SoundSource.BLOCKS, 0.4f, 0.8f);
+			}
+			be.spinStartTime = -1L;
+			be.setChanged();
+			level.sendBlockUpdated(pos, state, state, 3);
+		}
+	}
+
 	public void spin(Player player) {
 		if (level == null || level.isClientSide) return;
 		if (!canSpin()) return;
@@ -121,6 +165,8 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		if (pool.isEmpty()) items.set(0, ItemStack.EMPTY);
 
 		spinStartTime = level.getGameTime();
+
+		level.playSound(null, worldPosition, SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.BLOCKS, 0.5f, 1.4f);
 
 		SlotSpinResult result = SlotMachineLogic.spin(level.random, bet);
 

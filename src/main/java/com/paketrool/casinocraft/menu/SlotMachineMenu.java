@@ -60,6 +60,7 @@ public class SlotMachineMenu extends AbstractContainerMenu {
 	public int getBet() { return data.get(SlotMachineBlockEntity.DATA_BET); }
 	public int getLastPayout() { return data.get(SlotMachineBlockEntity.DATA_LAST_PAYOUT); }
 	public int getLastJackpot() { return data.get(SlotMachineBlockEntity.DATA_LAST_JACKPOT); }
+	public int getSpinTicksLeft() { return data.get(SlotMachineBlockEntity.DATA_SPIN_TICKS_LEFT); }
 	public int getLastGridSymbol(int col, int row) {
 		return data.get(3 + col * 3 + row);
 	}

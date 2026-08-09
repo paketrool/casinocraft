@@ -26,6 +26,12 @@ public final class CasinocraftItems {
 		new Item.Properties().stacksTo(16).rarity(Rarity.RARE)
 	);
 
+	public static final Item CASINO_GUIDE = register(
+		"casino_guide",
+		Item::new,
+		new Item.Properties().stacksTo(1)
+	);
+
 	public static void init() {
 	}
 

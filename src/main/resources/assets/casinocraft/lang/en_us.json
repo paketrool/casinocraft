@@ -2,5 +2,19 @@
 	"itemGroup.casinocraft.main": "Casinocraft",
 	"item.casinocraft.casino_chip": "Casino Chip",
 	"item.casinocraft.golden_talisman": "Golden Talisman",
-	"block.casinocraft.slot_machine": "Slot Machine"
+	"item.casinocraft.casino_guide": "Casino Rules",
+	"block.casinocraft.slot_machine": "Slot Machine",
+	"casinocraft.guide.title": "CASINO RULES",
+	"casinocraft.guide.subtitle": "Slot Machine 3×3, 8 paylines",
+	"casinocraft.guide.symbols_header": "Symbols & payouts (3 in a row)",
+	"casinocraft.guide.symbol.coal": "Coal",
+	"casinocraft.guide.symbol.iron": "Iron",
+	"casinocraft.guide.symbol.gold": "Gold",
+	"casinocraft.guide.symbol.lapis": "Lapis",
+	"casinocraft.guide.symbol.diamond": "Diamond",
+	"casinocraft.guide.symbol.seven": "SEVEN",
+	"casinocraft.guide.multiplier": "×%s",
+	"casinocraft.guide.jackpot": "+talisman!",
+	"casinocraft.guide.bet_note": "Bet ×1/×5/×10 multiplies payout",
+	"casinocraft.guide.drop_note": "Chips drop from mobs (1-30%)"
 }

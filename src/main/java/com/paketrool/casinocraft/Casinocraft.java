@@ -1,7 +1,9 @@
 package com.paketrool.casinocraft;
 
+import com.paketrool.casinocraft.attachment.CasinocraftAttachments;
 import com.paketrool.casinocraft.block.CasinocraftBlocks;
 import com.paketrool.casinocraft.block.entity.CasinocraftBlockEntities;
+import com.paketrool.casinocraft.event.CasinocraftEvents;
 import com.paketrool.casinocraft.item.CasinocraftCreativeTab;
 import com.paketrool.casinocraft.item.CasinocraftItems;
 import com.paketrool.casinocraft.loot.CasinocraftLoot;
@@ -22,7 +24,9 @@ public class Casinocraft implements ModInitializer {
 		CasinocraftItems.init();
 		CasinocraftMenus.init();
 		CasinocraftCreativeTab.init();
+		CasinocraftAttachments.init();
 		CasinocraftLoot.init();
+		CasinocraftEvents.init();
 		LOGGER.info("Casinocraft: bootstrap");
 	}
 

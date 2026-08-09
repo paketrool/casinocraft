@@ -2,5 +2,19 @@
 	"itemGroup.casinocraft.main": "Casinocraft",
 	"item.casinocraft.casino_chip": "Казино-фишка",
 	"item.casinocraft.golden_talisman": "Золотой талисман",
-	"block.casinocraft.slot_machine": "Слот-машина"
+	"item.casinocraft.casino_guide": "Правила казино",
+	"block.casinocraft.slot_machine": "Слот-машина",
+	"casinocraft.guide.title": "ПРАВИЛА КАЗИНО",
+	"casinocraft.guide.subtitle": "Слот-машина 3×3, 8 линий",
+	"casinocraft.guide.symbols_header": "Символы и выплаты (за 3 в ряд)",
+	"casinocraft.guide.symbol.coal": "Уголь",
+	"casinocraft.guide.symbol.iron": "Железо",
+	"casinocraft.guide.symbol.gold": "Золото",
+	"casinocraft.guide.symbol.lapis": "Лазурит",
+	"casinocraft.guide.symbol.diamond": "Алмаз",
+	"casinocraft.guide.symbol.seven": "СЕМЁРКА",
+	"casinocraft.guide.multiplier": "×%s",
+	"casinocraft.guide.jackpot": "+талисман!",
+	"casinocraft.guide.bet_note": "Ставка ×1/×5/×10 умножает выплату",
+	"casinocraft.guide.drop_note": "Фишки падают с мобов (1-30%)"
 }
