@@ -21,6 +21,11 @@ public class SlotMachineMenu extends AbstractContainerMenu {
 	public static final int BUTTON_BET_10 = 2;
 	public static final int BUTTON_SPIN = 3;
 
+	public static final int POOL_SLOT_X = 48;
+	public static final int POOL_SLOT_Y = 82;
+	public static final int BONUS_SLOT_X = 150;
+	public static final int BONUS_SLOT_Y = 62;
+
 	private final Container container;
 	private final ContainerData data;
 	private final ContainerLevelAccess access;
@@ -38,10 +43,27 @@ public class SlotMachineMenu extends AbstractContainerMenu {
 			? ContainerLevelAccess.create(be.getLevel(), be.getBlockPos())
 			: ContainerLevelAccess.NULL;
 
-		this.addSlot(new Slot(container, 0, 26, 62) {
+		this.addSlot(new Slot(container, SlotMachineBlockEntity.SLOT_POOL, POOL_SLOT_X, POOL_SLOT_Y) {
 			@Override
 			public boolean mayPlace(ItemStack stack) {
 				return stack.is(CasinocraftItems.CASINO_CHIP);
+			}
+		});
+
+		this.addSlot(new Slot(container, SlotMachineBlockEntity.SLOT_BONUS, BONUS_SLOT_X, BONUS_SLOT_Y) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return SlotMachineBlockEntity.isBonusAllowed(stack);
+			}
+
+			@Override
+			public int getMaxStackSize() {
+				return 1;
+			}
+
+			@Override
+			public int getMaxStackSize(ItemStack stack) {
+				return 1;
 			}
 		});
 
@@ -65,7 +87,7 @@ public class SlotMachineMenu extends AbstractContainerMenu {
 		return data.get(3 + col * 3 + row);
 	}
 	public int getChipsPool() {
-		ItemStack pool = container.getItem(0);
+		ItemStack pool = container.getItem(SlotMachineBlockEntity.SLOT_POOL);
 		return pool.is(CasinocraftItems.CASINO_CHIP) ? pool.getCount() : 0;
 	}
 
@@ -94,11 +116,16 @@ public class SlotMachineMenu extends AbstractContainerMenu {
 		if (slot != null && slot.hasItem()) {
 			ItemStack stack = slot.getItem();
 			copy = stack.copy();
-			if (index == 0) {
-				if (!this.moveItemStackTo(stack, 1, 37, true)) return ItemStack.EMPTY;
+			if (index < SlotMachineBlockEntity.SLOT_COUNT) {
+				if (!this.moveItemStackTo(stack, SlotMachineBlockEntity.SLOT_COUNT, this.slots.size(), true))
+					return ItemStack.EMPTY;
 			} else {
 				if (stack.is(CasinocraftItems.CASINO_CHIP)) {
-					if (!this.moveItemStackTo(stack, 0, 1, false)) return ItemStack.EMPTY;
+					if (!this.moveItemStackTo(stack, SlotMachineBlockEntity.SLOT_POOL, SlotMachineBlockEntity.SLOT_POOL + 1, false))
+						return ItemStack.EMPTY;
+				} else if (SlotMachineBlockEntity.isBonusAllowed(stack)) {
+					if (!this.moveItemStackTo(stack, SlotMachineBlockEntity.SLOT_BONUS, SlotMachineBlockEntity.SLOT_BONUS + 1, false))
+						return ItemStack.EMPTY;
 				} else {
 					return ItemStack.EMPTY;
 				}
@@ -107,6 +134,21 @@ public class SlotMachineMenu extends AbstractContainerMenu {
 			else slot.setChanged();
 		}
 		return copy;
+	}
+
+	@Override
+	public void removed(Player player) {
+		super.removed(player);
+		this.access.execute((level, pos) -> {
+			if (!(container instanceof SlotMachineBlockEntity be)) return;
+			ItemStack bonus = be.removeItemNoUpdate(SlotMachineBlockEntity.SLOT_BONUS);
+			if (!bonus.isEmpty()) {
+				if (!player.getInventory().add(bonus)) {
+					player.drop(bonus, false);
+				}
+				be.setChanged();
+			}
+		});
 	}
 
 	@Override

@@ -16,5 +16,14 @@
 	"casinocraft.guide.multiplier": "×%s",
 	"casinocraft.guide.jackpot": "+талисман!",
 	"casinocraft.guide.bet_note": "Ставка ×1/×5/×10 умножает выплату",
-	"casinocraft.guide.drop_note": "Фишки падают с мобов (1-30%)"
+	"casinocraft.guide.drop_note": "Фишки падают с мобов (1-30%)",
+	"casinocraft.slot.bonus": "★ БОНУС",
+	"enchantment.casinocraft.croupiers_edge": "Клинок крупье",
+	"enchantment.casinocraft.croupiers_haste": "Хватка крупье",
+	"enchantment.casinocraft.croupiers_ward": "Оберег крупье",
+	"enchantment.casinocraft.croupiers_pearl": "Бросок в бесконечность",
+	"enchantment.casinocraft.croupiers_chorus": "Врата хоруса",
+	"enchantment.casinocraft.croupiers_torch": "Огненное касание",
+	"enchantment.casinocraft.croupiers_flurry": "Ледяной вихрь",
+	"casinocraft.chorus.saved": "Точка возврата: %s, %s, %s"
 }

@@ -3,7 +3,11 @@
 	"package": "com.paketrool.casinocraft.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"CasinocraftMixin"
+		"CasinocraftMixin",
+		"EnderpearlItemMixin",
+		"TeleportRandomlyConsumeEffectMixin",
+		"SnowballItemMixin",
+		"SnowballMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

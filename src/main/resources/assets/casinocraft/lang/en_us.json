@@ -16,5 +16,14 @@
 	"casinocraft.guide.multiplier": "×%s",
 	"casinocraft.guide.jackpot": "+talisman!",
 	"casinocraft.guide.bet_note": "Bet ×1/×5/×10 multiplies payout",
-	"casinocraft.guide.drop_note": "Chips drop from mobs (1-30%)"
+	"casinocraft.guide.drop_note": "Chips drop from mobs (1-30%)",
+	"casinocraft.slot.bonus": "★ BONUS",
+	"enchantment.casinocraft.croupiers_edge": "Croupier's Edge",
+	"enchantment.casinocraft.croupiers_haste": "Croupier's Haste",
+	"enchantment.casinocraft.croupiers_ward": "Croupier's Ward",
+	"enchantment.casinocraft.croupiers_pearl": "Endless Toss",
+	"enchantment.casinocraft.croupiers_chorus": "Chorus Gateway",
+	"enchantment.casinocraft.croupiers_torch": "Fire Touch",
+	"enchantment.casinocraft.croupiers_flurry": "Frost Flurry",
+	"casinocraft.chorus.saved": "Return point: %s, %s, %s"
 }

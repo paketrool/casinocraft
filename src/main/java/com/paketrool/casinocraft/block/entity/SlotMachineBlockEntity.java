@@ -1,19 +1,23 @@
 package com.paketrool.casinocraft.block.entity;
 
+import com.paketrool.casinocraft.enchantment.CasinocraftEnchantments;
 import com.paketrool.casinocraft.item.CasinocraftItems;
 import com.paketrool.casinocraft.menu.SlotMachineMenu;
 import com.paketrool.casinocraft.slot.SlotMachineLogic;
 import com.paketrool.casinocraft.slot.SlotSpinResult;
 import com.paketrool.casinocraft.slot.SlotSymbol;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -23,7 +27,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,7 +38,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class SlotMachineBlockEntity extends BlockEntity implements Container, MenuProvider {
 
-	public static final int SLOT_COUNT = 1;
+	public static final int SLOT_POOL = 0;
+	public static final int SLOT_BONUS = 1;
+	public static final int SLOT_COUNT = 2;
 	public static final int DATA_COUNT = 13;
 
 	public static final int DATA_BET = 0;
@@ -104,7 +113,7 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 	}
 
 	public boolean canSpin() {
-		ItemStack pool = items.get(0);
+		ItemStack pool = items.get(SLOT_POOL);
 		return pool.is(CasinocraftItems.CASINO_CHIP) && pool.getCount() >= bet;
 	}
 
@@ -160,9 +169,9 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		if (level == null || level.isClientSide) return;
 		if (!canSpin()) return;
 
-		ItemStack pool = items.get(0);
+		ItemStack pool = items.get(SLOT_POOL);
 		pool.shrink(bet);
-		if (pool.isEmpty()) items.set(0, ItemStack.EMPTY);
+		if (pool.isEmpty()) items.set(SLOT_POOL, ItemStack.EMPTY);
 
 		spinStartTime = level.getGameTime();
 
@@ -181,10 +190,10 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		// payout chips: refill pool slot, overflow given to player
 		if (result.chipsPayout() > 0) {
 			int payout = result.chipsPayout();
-			ItemStack current = items.get(0);
+			ItemStack current = items.get(SLOT_POOL);
 			if (current.isEmpty()) {
 				int give = Math.min(payout, CasinocraftItems.CASINO_CHIP.getDefaultMaxStackSize());
-				items.set(0, new ItemStack(CasinocraftItems.CASINO_CHIP, give));
+				items.set(SLOT_POOL, new ItemStack(CasinocraftItems.CASINO_CHIP, give));
 				payout -= give;
 			} else {
 				int space = current.getMaxStackSize() - current.getCount();
@@ -207,12 +216,25 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 			if (!player.getInventory().add(talismans)) {
 				player.drop(talismans, false);
 			}
+			enchantBonusOnJackpot();
 		}
 
 		setChanged();
 		if (level != null) {
 			level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
 		}
+	}
+
+	private void enchantBonusOnJackpot() {
+		if (level == null) return;
+		ItemStack bonus = items.get(SLOT_BONUS);
+		if (bonus.isEmpty()) return;
+		ResourceKey<Enchantment> key = CasinocraftEnchantments.pickForItem(bonus);
+		if (key == null) return;
+		Holder<Enchantment> holder = level.registryAccess()
+			.lookupOrThrow(Registries.ENCHANTMENT)
+			.getOrThrow(key);
+		bonus.enchant(holder, 1);
 	}
 
 	public ContainerData getDataAccess() {
@@ -228,7 +250,10 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 
 	@Override
 	public boolean isEmpty() {
-		return items.get(0).isEmpty();
+		for (ItemStack stack : items) {
+			if (!stack.isEmpty()) return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -256,7 +281,11 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 	@Override
 	public void setItem(int slot, ItemStack stack) {
 		items.set(slot, stack);
-		if (stack.getCount() > getMaxStackSize()) stack.setCount(getMaxStackSize());
+		if (slot == SLOT_BONUS) {
+			if (stack.getCount() > 1) stack.setCount(1);
+		} else if (stack.getCount() > getMaxStackSize()) {
+			stack.setCount(getMaxStackSize());
+		}
 		setChanged();
 	}
 
@@ -268,7 +297,32 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 
 	@Override
 	public boolean canPlaceItem(int slot, ItemStack stack) {
-		return stack.is(CasinocraftItems.CASINO_CHIP);
+		if (slot == SLOT_POOL) {
+			return stack.is(CasinocraftItems.CASINO_CHIP);
+		}
+		if (slot == SLOT_BONUS) {
+			return isBonusAllowed(stack);
+		}
+		return false;
+	}
+
+	public static boolean isBonusAllowed(ItemStack stack) {
+		if (stack.isEmpty()) return false;
+		if (stack.is(CasinocraftItems.CASINO_CHIP)) return false;
+		if (isSpecialAllowed(stack)) return true;
+		return !(stack.getItem() instanceof BlockItem);
+	}
+
+	private static boolean isSpecialAllowed(ItemStack stack) {
+		return stack.is(Items.TORCH)
+			|| stack.is(Items.ENDER_PEARL)
+			|| stack.is(Items.CHORUS_FRUIT)
+			|| stack.is(Items.SNOWBALL);
+	}
+
+	@Override
+	public int getMaxStackSize() {
+		return 64;
 	}
 
 	@Override
@@ -296,7 +350,10 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		super.loadAdditional(tag, registries);
 		items.clear();
 		tag.getCompound("Pool").ifPresent(pool ->
-			ItemStack.parse(registries, pool).ifPresent(stack -> items.set(0, stack))
+			ItemStack.parse(registries, pool).ifPresent(stack -> items.set(SLOT_POOL, stack))
+		);
+		tag.getCompound("Bonus").ifPresent(bonus ->
+			ItemStack.parse(registries, bonus).ifPresent(stack -> items.set(SLOT_BONUS, stack))
 		);
 		bet = tag.getIntOr("Bet", 1);
 		lastPayout = tag.getIntOr("LastPayout", 0);
@@ -311,9 +368,13 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 	@Override
 	protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
 		super.saveAdditional(tag, registries);
-		ItemStack pool = items.get(0);
+		ItemStack pool = items.get(SLOT_POOL);
 		if (!pool.isEmpty()) {
 			tag.put("Pool", pool.save(registries, new CompoundTag()));
+		}
+		ItemStack bonus = items.get(SLOT_BONUS);
+		if (!bonus.isEmpty()) {
+			tag.put("Bonus", bonus.save(registries, new CompoundTag()));
 		}
 		tag.putInt("Bet", bet);
 		tag.putInt("LastPayout", lastPayout);

@@ -32,6 +32,10 @@ public class SlotMachineScreen extends AbstractContainerScreen<SlotMachineMenu> 
 
 	private static final int TEXT_LIGHT = 0xFFF0E6C0;
 
+	private static final int SLOT_BORDER_DARK = 0xFF2A1808;
+	private static final int SLOT_INNER = 0xFF3E2A15;
+	private static final int SLOT_HINT = 0x80F0E6C0;
+
 	public SlotMachineScreen(SlotMachineMenu menu, Inventory playerInventory, Component title) {
 		super(menu, playerInventory, title);
 		this.imageWidth = 176;
@@ -86,6 +90,28 @@ public class SlotMachineScreen extends AbstractContainerScreen<SlotMachineMenu> 
 				g.blit(net.minecraft.client.renderer.RenderType::guiTextured, SYMBOL_TEX[ordinal], sx, sy, 0f, 0f, SYMBOL_SIZE, SYMBOL_SIZE, SYMBOL_SIZE, SYMBOL_SIZE);
 			}
 		}
+
+		int bx = x + SlotMachineMenu.BONUS_SLOT_X - 1;
+		int by = y + SlotMachineMenu.BONUS_SLOT_Y - 1;
+		g.fill(bx, by, bx + 18, by + 18, SLOT_BORDER_DARK);
+		g.fill(bx + 1, by + 1, bx + 17, by + 17, SLOT_INNER);
+
+		if (!menu.getSlot(1).hasItem()) {
+			int cx = bx + 9 - this.font.width("★") / 2;
+			int cy = by + 5;
+			g.drawString(this.font, "★", cx, cy, SLOT_HINT, false);
+		}
+
+		int px = x + SlotMachineMenu.POOL_SLOT_X - 1;
+		int py = y + SlotMachineMenu.POOL_SLOT_Y - 1;
+		g.fill(px, py, px + 18, py + 18, SLOT_BORDER_DARK);
+		g.fill(px + 1, py + 1, px + 17, py + 17, SLOT_INNER);
+
+		if (!menu.getSlot(0).hasItem()) {
+			int cx = px + 9 - this.font.width("¤") / 2;
+			int cy = py + 5;
+			g.drawString(this.font, "¤", cx, cy, SLOT_HINT, false);
+		}
 	}
 
 	@Override
@@ -102,6 +128,11 @@ public class SlotMachineScreen extends AbstractContainerScreen<SlotMachineMenu> 
 		if (jackpot > 0) {
 			g.drawString(this.font, Component.literal("ДЖЕКПОТ!"), 8, 94, 0xFFE84040, true);
 		}
+
+		Component label = Component.translatable("casinocraft.slot.bonus");
+		int lw = this.font.width(label);
+		int lx = SlotMachineMenu.BONUS_SLOT_X + 8 - lw / 2;
+		g.drawString(this.font, label, lx, SlotMachineMenu.BONUS_SLOT_Y - 10, TEXT_LIGHT, false);
 	}
 
 	@Override
