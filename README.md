@@ -2,7 +2,11 @@
 
 Fabric-мод для Minecraft, добавляющий игровое казино: слот-машина 3×3 с 8 линиями, ставки казино-фишками, джекпот с кастомными зачарованиями «Крупье» на предметы.
 
+*A Fabric mod that adds an in-game casino: a 3×3 slot machine with 8 winning lines, chip-based bets, and jackpot-only "Croupier" enchantments applied to items in the bonus slot.*
+
 **Modrinth:** https://modrinth.com/mod/casino-royale-mc
+
+**Read in another language:** [🇷🇺 Русский](#возможности) · [🇬🇧 English](#english)
 
 ## Возможности
 
@@ -51,6 +55,60 @@ CC0-1.0 — свободно используй, форки и дистрибу�
 ## Багрепорты и предложения
 
 Через [Issues](https://github.com/paketrool/casinocraft/issues) — есть шаблоны для багов и фич.
+
+---
+
+# English
+
+A Fabric mod for Minecraft that turns an empty room into a working casino. Place a slot machine, feed it chips, spin the 3×3 grid, and try to land three sevens across one of eight winning lines. On a jackpot, any item sitting in the machine's bonus slot walks out with a custom **"Croupier" enchantment** tuned to what that item does.
+
+## Features
+
+- **Slot machine** — a two-block-tall machine with a 3D model, animated reels, sound, and lit-up sign
+- **Chip currency** — casino chips are the only accepted bet; supported bet multipliers are ×1 and ×10
+- **6 symbols** — coal / iron / gold / lapis / diamond / **seven** (jackpot ×50)
+- **Bonus slot** — drop any item here and it will receive a **custom "Croupier" enchantment on jackpot**:
+  - Sword / tool / armor — its own enchantment fitted to the item's role
+  - **Ender pearl** → infinite throws
+  - **Chorus fruit** → Sneak+RMB saves a location, RMB teleports back
+  - **Torch** → auto-ignites flammable blocks in a small radius while held (won't set the ground on fire)
+  - **Snowball** → infinite throws + 30% chance to freeze the target on hit
+- **In-game guidebook** — opens on interaction and explains symbols and rules
+
+## Requirements
+
+- Minecraft **1.21.2 – 1.21.8** (built with [Stonecutter](https://stonecutter.kikugie.dev/))
+- Fabric Loader 0.19.3+
+- Fabric API
+- Java 21
+
+## Building
+
+```bash
+# Build every supported version at once
+./gradlew build
+
+# Build one specific version
+./gradlew :1.21.5:build
+
+# Launch a development client
+./gradlew :1.21.5:runClient
+```
+
+Built jars land in `versions/<mc>/build/libs/`.
+
+## Branches
+
+- **main** — stable release
+- **stonecutter** — multi-version build setup (active development)
+
+## License
+
+Released under **CC0-1.0** — free to use, fork, and redistribute, no attribution required.
+
+## Bug reports & feature requests
+
+Please open an [Issue](https://github.com/paketrool/casinocraft/issues) — the repository provides bug-report and feature-request templates.
 
 ---
 
