@@ -41,9 +41,14 @@ dependencies {
 
 tasks.processResources {
 	val version = project.version.toString()
+	val mcDep = project.property("minecraft_dependency") as String
 	inputs.property("version", version)
+	inputs.property("minecraft_dependency", mcDep)
 	filesMatching("fabric.mod.json") {
-		expand(mapOf("version" to version))
+		expand(mapOf(
+			"version" to version,
+			"minecraft_dependency" to mcDep
+		))
 	}
 }
 
