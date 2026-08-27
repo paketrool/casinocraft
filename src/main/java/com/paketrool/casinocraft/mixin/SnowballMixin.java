@@ -19,7 +19,7 @@ public abstract class SnowballMixin {
 	private void casinocraft$freezeOnHit(EntityHitResult result, CallbackInfo ci) {
 		Snowball self = (Snowball) (Object) this;
 		Level level = self.level();
-		if (level.isClientSide) return;
+		if (level.isClientSide()) return;
 
 		ItemStack item = self.getItem();
 		if (item.isEmpty()) return;

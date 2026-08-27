@@ -21,7 +21,7 @@ public class CasinocraftClient implements ClientModInitializer {
 
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			if (player.getItemInHand(hand).is(CasinocraftItems.CASINO_GUIDE)) {
-				if (level.isClientSide) {
+				if (level.isClientSide()) {
 					Minecraft.getInstance().setScreen(new SlotGuideScreen());
 				}
 				return InteractionResult.SUCCESS;

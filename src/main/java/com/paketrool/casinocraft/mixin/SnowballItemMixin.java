@@ -17,7 +17,7 @@ public abstract class SnowballItemMixin {
 
 	@Inject(method = "use", at = @At("RETURN"))
 	private void casinocraft$infiniteSnowball(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-		if (level.isClientSide) return;
+		if (level.isClientSide()) return;
 		if (player.hasInfiniteMaterials()) return;
 		ItemStack stack = player.getItemInHand(hand);
 		if (CasinocraftEnchantments.has(stack, CasinocraftEnchantments.CROUPIERS_FLURRY, level)) {

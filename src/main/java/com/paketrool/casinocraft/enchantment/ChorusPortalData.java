@@ -1,5 +1,6 @@
 package com.paketrool.casinocraft.enchantment;
 
+import com.paketrool.casinocraft.compat.NbtCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +27,7 @@ public final class ChorusPortalData {
 		CustomData custom = stack.get(DataComponents.CUSTOM_DATA);
 		if (custom == null) return null;
 		CompoundTag tag = custom.copyTag();
-		long v = tag.getLongOr(POS_KEY, Long.MIN_VALUE);
+		long v = NbtCompat.getLongOr(tag, POS_KEY, Long.MIN_VALUE);
 		if (v == Long.MIN_VALUE) return null;
 		return BlockPos.of(v);
 	}
@@ -35,6 +36,6 @@ public final class ChorusPortalData {
 		CustomData custom = stack.get(DataComponents.CUSTOM_DATA);
 		if (custom == null) return "";
 		CompoundTag tag = custom.copyTag();
-		return tag.getStringOr(DIM_KEY, "");
+		return NbtCompat.getStringOr(tag, DIM_KEY, "");
 	}
 }

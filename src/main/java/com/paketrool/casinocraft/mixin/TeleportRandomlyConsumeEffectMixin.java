@@ -1,5 +1,6 @@
 package com.paketrool.casinocraft.mixin;
 
+//? if >=1.21.4 {
 import com.paketrool.casinocraft.enchantment.CasinocraftEnchantments;
 import com.paketrool.casinocraft.enchantment.ChorusPortalData;
 import net.minecraft.core.BlockPos;
@@ -35,3 +36,7 @@ public abstract class TeleportRandomlyConsumeEffectMixin {
 		}
 	}
 }
+//?} else {
+/*public abstract class TeleportRandomlyConsumeEffectMixin {
+}
+*///?}

@@ -49,7 +49,7 @@ public final class CasinocraftEvents {
 	}
 
 	private static InteractionResult onUseItem(Player player, Level level, InteractionHand hand) {
-		if (level.isClientSide) return InteractionResult.PASS;
+		if (level.isClientSide()) return InteractionResult.PASS;
 		ItemStack stack = player.getItemInHand(hand);
 		if (!stack.is(Items.CHORUS_FRUIT)) return InteractionResult.PASS;
 		if (!player.isShiftKeyDown()) return InteractionResult.PASS;
@@ -80,6 +80,9 @@ public final class CasinocraftEvents {
 	}
 
 	private static void igniteAroundIfTorch(ServerPlayer player) {
+		//? if >=1.21.6 {
+		/*ServerLevel level = (ServerLevel) player.level();*/
+		//?} else
 		ServerLevel level = player.serverLevel();
 		ItemStack main = player.getMainHandItem();
 		ItemStack off = player.getOffhandItem();

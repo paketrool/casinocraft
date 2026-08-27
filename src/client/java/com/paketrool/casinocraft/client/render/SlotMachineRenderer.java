@@ -37,8 +37,19 @@ public class SlotMachineRenderer implements BlockEntityRenderer<SlotMachineBlock
 
 	public SlotMachineRenderer(BlockEntityRendererProvider.Context ctx) {}
 
+	//? if >=1.21.5 {
 	@Override
 	public void render(SlotMachineBlockEntity be, float partialTick, PoseStack ps, MultiBufferSource buffer, int light, int overlay, Vec3 cameraPos) {
+		renderImpl(be, partialTick, ps, buffer, light, overlay);
+	}
+	//?} else {
+	/*@Override
+	public void render(SlotMachineBlockEntity be, float partialTick, PoseStack ps, MultiBufferSource buffer, int light, int overlay) {
+		renderImpl(be, partialTick, ps, buffer, light, overlay);
+	}
+	*///?}
+
+	private void renderImpl(SlotMachineBlockEntity be, float partialTick, PoseStack ps, MultiBufferSource buffer, int light, int overlay) {
 		if (be.getLevel() == null) return;
 		BlockState state = be.getBlockState();
 		if (state.getValue(HALF) != DoubleBlockHalf.LOWER) return;

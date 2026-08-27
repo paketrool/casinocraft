@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -91,7 +90,7 @@ public class SlotMachineBlock extends HorizontalDirectionalBlock implements Enti
 
 	@Override
 	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			preventCreativeDropFromOtherHalf(level, pos, state, player);
 		}
 		return super.playerWillDestroy(level, pos, state, player);
@@ -142,7 +141,7 @@ public class SlotMachineBlock extends HorizontalDirectionalBlock implements Enti
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		if (level.isClientSide) return null;
+		if (level.isClientSide()) return null;
 		if (state.getValue(HALF) != DoubleBlockHalf.LOWER) return null;
 		if (type != CasinocraftBlockEntities.SLOT_MACHINE) return null;
 		return (BlockEntityTicker<T>) (BlockEntityTicker<SlotMachineBlockEntity>) SlotMachineBlockEntity::serverTick;
@@ -150,7 +149,7 @@ public class SlotMachineBlock extends HorizontalDirectionalBlock implements Enti
 
 	@Override
 	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-		if (!level.isClientSide) {
+		if (!level.isClientSide()) {
 			BlockPos entityPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
 			BlockEntity be = level.getBlockEntity(entityPos);
 			if (be instanceof SlotMachineBlockEntity slot) {

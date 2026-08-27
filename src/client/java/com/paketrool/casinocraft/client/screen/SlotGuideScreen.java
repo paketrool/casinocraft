@@ -83,7 +83,7 @@ public class SlotGuideScreen extends Screen {
 		for (int i = 0; i < SlotSymbol.VALUES.length; i++) {
 			SlotSymbol sym = SlotSymbol.VALUES[i];
 			int y = rowY + i * rowStep;
-			g.blit(net.minecraft.client.renderer.RenderType::guiTextured, SYMBOL_TEX[i], iconX, y - 2, 0f, 0f, 16, 16, 16, 16);
+			com.paketrool.casinocraft.client.compat.GuiCompat.blitTextured(g, SYMBOL_TEX[i], iconX, y - 2, 0f, 0f, 16, 16, 16, 16);
 			g.drawString(this.font, Component.translatable(SYMBOL_KEY[i]), nameX, y + 2, sym == SlotSymbol.SEVEN ? TEXT_RED : TEXT_LIGHT, false);
 			g.drawString(this.font, Component.translatable("casinocraft.guide.multiplier", sym.multiplier), multX, y + 2, TEXT_GOLD, false);
 			if (sym == SlotSymbol.SEVEN) {
