@@ -1,5 +1,6 @@
 package com.paketrool.casinocraft.block.entity;
 
+import com.paketrool.casinocraft.compat.NbtCompat;
 import com.paketrool.casinocraft.enchantment.CasinocraftEnchantments;
 import com.paketrool.casinocraft.item.CasinocraftItems;
 import com.paketrool.casinocraft.menu.SlotMachineMenu;
@@ -166,7 +167,7 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 	}
 
 	public void spin(Player player) {
-		if (level == null || level.isClientSide) return;
+		if (level == null || level.isClientSide()) return;
 		if (!canSpin()) return;
 
 		ItemStack pool = items.get(SLOT_POOL);
@@ -345,21 +346,56 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 
 	// ---------- Save / load ----------
 
+	//? if >=1.21.6 {
+	/*@Override
+	protected void loadAdditional(net.minecraft.world.level.storage.ValueInput input) {
+		super.loadAdditional(input);
+		items.clear();
+		input.read("Pool", ItemStack.OPTIONAL_CODEC).ifPresent(stack -> items.set(SLOT_POOL, stack));
+		input.read("Bonus", ItemStack.OPTIONAL_CODEC).ifPresent(stack -> items.set(SLOT_BONUS, stack));
+		bet = input.getIntOr("Bet", 1);
+		lastPayout = input.getIntOr("LastPayout", 0);
+		lastJackpot = input.getIntOr("LastJackpot", 0);
+		spinStartTime = input.getLongOr("SpinStartTime", -1L);
+		int[] grid = input.getIntArray("LastGrid").orElse(new int[0]);
+		for (int i = 0; i < lastGrid.length; i++) {
+			lastGrid[i] = i < grid.length ? grid[i] : SlotSymbol.COAL.ordinal();
+		}
+	}
+
+	@Override
+	protected void saveAdditional(net.minecraft.world.level.storage.ValueOutput output) {
+		super.saveAdditional(output);
+		ItemStack pool = items.get(SLOT_POOL);
+		if (!pool.isEmpty()) {
+			output.store("Pool", ItemStack.OPTIONAL_CODEC, pool);
+		}
+		ItemStack bonus = items.get(SLOT_BONUS);
+		if (!bonus.isEmpty()) {
+			output.store("Bonus", ItemStack.OPTIONAL_CODEC, bonus);
+		}
+		output.putInt("Bet", bet);
+		output.putInt("LastPayout", lastPayout);
+		output.putInt("LastJackpot", lastJackpot);
+		output.putIntArray("LastGrid", lastGrid.clone());
+		output.putLong("SpinStartTime", spinStartTime);
+	}
+	*///?} else {
 	@Override
 	protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
 		super.loadAdditional(tag, registries);
 		items.clear();
-		tag.getCompound("Pool").ifPresent(pool ->
+		NbtCompat.ifCompoundPresent(tag, "Pool", pool ->
 			ItemStack.parse(registries, pool).ifPresent(stack -> items.set(SLOT_POOL, stack))
 		);
-		tag.getCompound("Bonus").ifPresent(bonus ->
+		NbtCompat.ifCompoundPresent(tag, "Bonus", bonus ->
 			ItemStack.parse(registries, bonus).ifPresent(stack -> items.set(SLOT_BONUS, stack))
 		);
-		bet = tag.getIntOr("Bet", 1);
-		lastPayout = tag.getIntOr("LastPayout", 0);
-		lastJackpot = tag.getIntOr("LastJackpot", 0);
-		spinStartTime = tag.getLongOr("SpinStartTime", -1L);
-		int[] grid = tag.getIntArray("LastGrid").orElse(new int[0]);
+		bet = NbtCompat.getIntOr(tag, "Bet", 1);
+		lastPayout = NbtCompat.getIntOr(tag, "LastPayout", 0);
+		lastJackpot = NbtCompat.getIntOr(tag, "LastJackpot", 0);
+		spinStartTime = NbtCompat.getLongOr(tag, "SpinStartTime", -1L);
+		int[] grid = NbtCompat.getIntArrayOr(tag, "LastGrid", new int[0]);
 		for (int i = 0; i < lastGrid.length; i++) {
 			lastGrid[i] = i < grid.length ? grid[i] : SlotSymbol.COAL.ordinal();
 		}
@@ -382,6 +418,7 @@ public class SlotMachineBlockEntity extends BlockEntity implements Container, Me
 		tag.putIntArray("LastGrid", lastGrid.clone());
 		tag.putLong("SpinStartTime", spinStartTime);
 	}
+	//?}
 
 	@Nullable
 	@Override

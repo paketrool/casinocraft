@@ -5,6 +5,7 @@
 	"mixins": [
 		"CasinocraftMixin",
 		"EnderpearlItemMixin",
+		//? if >=1.21.4
 		"TeleportRandomlyConsumeEffectMixin",
 		"SnowballItemMixin",
 		"SnowballMixin"

@@ -72,7 +72,7 @@ public class SlotMachineScreen extends AbstractContainerScreen<SlotMachineMenu> 
 	protected void renderBg(GuiGraphics g, float partialTick, int mouseX, int mouseY) {
 		int x = this.leftPos;
 		int y = this.topPos;
-		g.blit(net.minecraft.client.renderer.RenderType::guiTextured, BG_TEXTURE, x, y, 0f, 0f, imageWidth, imageHeight, 256, 256);
+		com.paketrool.casinocraft.client.compat.GuiCompat.blitTextured(g, BG_TEXTURE, x, y, 0f, 0f, imageWidth, imageHeight, 256, 256);
 
 		int spinLeft = menu.getSpinTicksLeft();
 		for (int col = 0; col < 3; col++) {
@@ -87,7 +87,7 @@ public class SlotMachineScreen extends AbstractContainerScreen<SlotMachineMenu> 
 				}
 				int sx = x + GRID_X + col * CELL + (CELL - SYMBOL_SIZE) / 2;
 				int sy = y + GRID_Y + row * CELL + (CELL - SYMBOL_SIZE) / 2;
-				g.blit(net.minecraft.client.renderer.RenderType::guiTextured, SYMBOL_TEX[ordinal], sx, sy, 0f, 0f, SYMBOL_SIZE, SYMBOL_SIZE, SYMBOL_SIZE, SYMBOL_SIZE);
+				com.paketrool.casinocraft.client.compat.GuiCompat.blitTextured(g, SYMBOL_TEX[ordinal], sx, sy, 0f, 0f, SYMBOL_SIZE, SYMBOL_SIZE, SYMBOL_SIZE, SYMBOL_SIZE);
 			}
 		}
 
