@@ -100,6 +100,12 @@ jobs:
       - name: List collected jars
         run: ls -la dist/
 
+      - name: Strip sources / dev / javadoc jars (не грузим на Modrinth/CurseForge)
+        run: |
+          rm -f dist/*-sources.jar dist/*-dev.jar dist/*-javadoc.jar
+          echo "--- Осталось после strip ---"
+          ls -la dist/
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
