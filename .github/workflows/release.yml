@@ -118,7 +118,10 @@ jobs:
         with:
           modrinth-id: N7SalUTv
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files: dist/*.jar
+          files: |
+            dist/*.jar
+            !dist/*-sources.jar
+            !dist/*-dev.jar
           loaders: fabric
           game-versions: |
             1.21.2
@@ -142,7 +145,10 @@ jobs:
         with:
           curseforge-id: ${{ vars.CURSEFORGE_ID }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          files: dist/*.jar
+          files: |
+            dist/*.jar
+            !dist/*-sources.jar
+            !dist/*-dev.jar
           loaders: fabric
           game-versions: |
             1.21.2
