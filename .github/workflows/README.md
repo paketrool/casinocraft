@@ -20,7 +20,8 @@ GitHub Actions workflows for CI and release automation.
 ## Secrets and variables used
 
 - **`MODRINTH_TOKEN`** (secret) — a Modrinth Personal Access Token with the `Create versions` scope.
-- **`CURSEFORGE_TOKEN`** (secret) — a CurseForge API token, created at https://legacy.curseforge.com/account/api-tokens. Needed only after the CurseForge project has passed initial moderation.
+- **`MODRINTH_ID`** (repository variable, not secret) — the Modrinth project slug or id (e.g. `N7SalUTv`).
+- **`CURSEFORGE_TOKEN`** (secret) — a CurseForge API token, created at https://legacy.curseforge.com/account/api-tokens or in the new Authors panel. Needed only after the CurseForge project has passed initial moderation.
 - **`CURSEFORGE_ID`** (repository variable, not secret) — the CurseForge project id (visible in the project URL once approved). Set under Settings → Secrets and variables → Actions → Variables.
 
 Both CurseForge- and Modrinth-publishing steps skip themselves if their respective credentials are missing, so partial setup is safe.

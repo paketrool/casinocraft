@@ -118,11 +118,11 @@ jobs:
 
       - name: Publish to Modrinth
         uses: Kir-Antipov/mc-publish@v3.3
-        if: env.MODRINTH_TOKEN != ''
+        if: env.MODRINTH_TOKEN != '' && vars.MODRINTH_ID != ''
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:
-          modrinth-id: N7SalUTv
+          modrinth-id: ${{ vars.MODRINTH_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: |
             dist/*.jar
