@@ -17,8 +17,12 @@ GitHub Actions workflows for CI and release automation.
   3. Publishes every jar to **Modrinth** via [`Kir-Antipov/mc-publish`](https://github.com/Kir-Antipov/mc-publish), using the `MODRINTH_TOKEN` repository secret.
 - **Purpose:** one `git tag && git push` cuts a full multi-version release across GitHub and Modrinth.
 
-## Secrets used
+## Secrets and variables used
 
-- **`MODRINTH_TOKEN`** — a Modrinth Personal Access Token with the `Create versions` scope. Set under Settings → Secrets and variables → Actions.
+- **`MODRINTH_TOKEN`** (secret) — a Modrinth Personal Access Token with the `Create versions` scope.
+- **`CURSEFORGE_TOKEN`** (secret) — a CurseForge API token, created at https://legacy.curseforge.com/account/api-tokens. Needed only after the CurseForge project has passed initial moderation.
+- **`CURSEFORGE_ID`** (repository variable, not secret) — the CurseForge project id (visible in the project URL once approved). Set under Settings → Secrets and variables → Actions → Variables.
+
+Both CurseForge- and Modrinth-publishing steps skip themselves if their respective credentials are missing, so partial setup is safe.
 
 The `GITHUB_TOKEN` used for creating the GitHub Release is provided automatically by Actions.
