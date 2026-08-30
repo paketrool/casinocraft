@@ -6,10 +6,18 @@ on:
       - 'v*'
   workflow_dispatch:
     inputs:
-      dry_run:
-        description: 'Dry-run (не публиковать, только собрать)'
+      version:
+        description: 'Номер версии для публикации (например, 1.0.1). Оставь пустым для dry-run.'
         required: false
-        default: 'false'
+        default: ''
+      create_tag:
+        description: 'Создать git-тег v<version> в репозитории'
+        required: false
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
 
 permissions:
   contents: write
@@ -49,10 +57,38 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-24.04
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    if: |
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
+      (github.event_name == 'workflow_dispatch' && inputs.version != '')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve release version
+        id: ver
+        run: |
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            V="${{ inputs.version }}"
+          else
+            V="${GITHUB_REF_NAME#v}"
+          fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "tag=v$V" >> "$GITHUB_OUTPUT"
+          echo "Publishing version: $V"
+
+      - name: Create and push git tag (workflow_dispatch)
+        if: github.event_name == 'workflow_dispatch' && inputs.create_tag == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git rev-parse "${{ steps.ver.outputs.tag }}" >/dev/null 2>&1; then
+            echo "Tag ${{ steps.ver.outputs.tag }} already exists, skipping."
+          else
+            git tag -a "${{ steps.ver.outputs.tag }}" -m "Release ${{ steps.ver.outputs.tag }}"
+            git push origin "${{ steps.ver.outputs.tag }}"
+          fi
 
       - name: Download all built jars
         uses: actions/download-artifact@v4
@@ -67,6 +103,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.ver.outputs.tag }}
+          name: ${{ steps.ver.outputs.tag }}
           files: dist/*.jar
           generate_release_notes: true
           draft: false
@@ -90,6 +128,7 @@ jobs:
             1.21.6
             1.21.7
             1.21.8
+          version: ${{ steps.ver.outputs.version }}
           version-type: release
           dependencies: |
             fabric-api(required)
@@ -113,6 +152,7 @@ jobs:
             1.21.6
             1.21.7
             1.21.8
+          version: ${{ steps.ver.outputs.version }}
           version-type: release
           dependencies: |
             fabric-api(required)
